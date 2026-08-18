@@ -1,41 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
 import ofimatica1 from "../img/ofimatica1.png";
 import ofimatica2 from "../img/ofimatica2.png";
 import ofimatica3 from "../img/ofimatica3.png";
 import ofimatica4 from "../img/ofimatica4.png";
 
+import { hablar, actualizarHolograma } from "../voz";
+
 function Ofimatica() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const mensaje = new SpeechSynthesisUtterance(
-      "Bienvenido a Aplicaciones Ofimáticas. En esta materia aprenderás a utilizar herramientas como Word, Excel y PowerPoint. Aprenderás a crear documentos, trabajar con hojas de cálculo, organizar información y desarrollar presentaciones digitales."
+    actualizarHolograma(
+      "OFIMÁTICA",
+      "Uso profesional de Word, Excel, PowerPoint y herramientas de productividad.",
+      ofimatica1
     );
 
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.95;
+    hablar(
+      "Bienvenido a Aplicaciones Ofimáticas. En esta materia aprenderás a utilizar herramientas como Word, Excel y PowerPoint. Aprenderás a crear documentos, trabajar con hojas de cálculo, organizar información y desarrollar presentaciones digitales.",
+      () => {
+        hablar("¿Deseas conocer otra materia del área de informática?", () => navigate("/"));
+      }
+    );
 
-    mensaje.onend = () => {
-      const pregunta = new SpeechSynthesisUtterance(
-        "¿Deseas conocer otra materia del área de informática?"
-      );
-
-      pregunta.lang = "es-ES";
-
-      pregunta.onend = () => {
-        navigate("/");
-      };
-
-      window.speechSynthesis.speak(pregunta);
-    };
-
-    window.speechSynthesis.speak(mensaje);
-
-    return () => {
-      window.speechSynthesis.cancel();
-    };
+    return () => window.speechSynthesis.cancel();
   }, [navigate]);
 
   return (

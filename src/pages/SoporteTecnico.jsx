@@ -1,37 +1,34 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
 import soporte1 from "../img/soporte1.png";
 import soporte2 from "../img/soporte2.png";
 import soporte3 from "../img/soporte3.png";
 import soporte4 from "../img/soporte4.png";
 
+// Importamos nuestro nuevo módulo
+import { hablar, actualizarHolograma } from "../voz";
+
 function SoporteTecnico() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const mensaje = new SpeechSynthesisUtterance(
-      "Bienvenido a Soporte Técnico. En esta materia aprenderás mantenimiento preventivo y correctivo de computadoras, identificación de componentes, diagnóstico de fallas y procedimientos para mantener los equipos funcionando correctamente."
+    // 1. Actualizamos el holograma al entrar a la materia
+    actualizarHolograma(
+      "SOPORTE TÉCNICO", 
+      "Mantenimiento, reparación y diagnóstico de hardware y software.",
+      soporte1
     );
 
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.95;
-
-    mensaje.onend = () => {
-      const pregunta = new SpeechSynthesisUtterance(
-        "¿Deseas conocer otra materia del área de informática?"
-      );
-
-      pregunta.lang = "es-ES";
-
-      pregunta.onend = () => {
-        navigate("/");
-      };
-
-      window.speechSynthesis.speak(pregunta);
-    };
-
-    window.speechSynthesis.speak(mensaje);
+    // 2. Usamos nuestra función centralizada para hablar
+    hablar(
+      "Bienvenido a Soporte Técnico. En esta materia aprenderás mantenimiento preventivo y correctivo de computadoras, identificación de componentes, diagnóstico de fallas y procedimientos para mantener los equipos funcionando correctamente.", 
+      () => {
+        // Cuando termine de decir lo primero, dice lo segundo y luego vuelve al menú
+        hablar("¿Deseas conocer otra materia del área de informática?", () => {
+          navigate("/");
+        });
+      }
+    );
 
     return () => {
       window.speechSynthesis.cancel();

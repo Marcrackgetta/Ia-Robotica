@@ -1,31 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
 import diseno1 from "../img/diseno1.png";
 import diseno2 from "../img/diseno2.png";
 import diseno3 from "../img/diseno3.png";
 import diseno4 from "../img/diseno4.png";
 
+import { hablar, actualizarHolograma } from "../voz";
+
 function DisenoWeb() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const mensaje = new SpeechSynthesisUtterance(
-      "Bienvenido a Diseño y Desarrollo Web. En esta materia aprenderás a estructurar sitios web con HTML, aplicar estilos con CSS y crear páginas dinámicas e interactivas utilizando JavaScript."
+    actualizarHolograma(
+      "DISEÑO WEB",
+      "Creación de sitios web modernos, maquetación responsive e interactividad.",
+      diseno1
     );
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.95;
 
-    mensaje.onend = () => {
-      const pregunta = new SpeechSynthesisUtterance(
-        "¿Deseas conocer otra materia del área de informática?"
-      );
-      pregunta.lang = "es-ES";
-      pregunta.onend = () => navigate("/");
-      window.speechSynthesis.speak(pregunta);
-    };
+    hablar(
+      "Bienvenido a Diseño y Desarrollo Web. En esta materia aprenderás a estructurar sitios web con HTML, aplicar estilos con CSS y crear páginas dinámicas e interactivas utilizando JavaScript.",
+      () => {
+        hablar("¿Deseas conocer otra materia del área de informática?", () => navigate("/"));
+      }
+    );
 
-    window.speechSynthesis.speak(mensaje);
     return () => window.speechSynthesis.cancel();
   }, [navigate]);
 

@@ -1,41 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
 import redes1 from "../img/redes1.png";
 import redes2 from "../img/redes2.png";
 import redes3 from "../img/redes3.png";
 import redes4 from "../img/redes4.png";
 
+import { hablar, actualizarHolograma } from "../voz";
+
 function SistemasRedes() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const mensaje = new SpeechSynthesisUtterance(
-      "Bienvenido a Sistemas Operativos y Redes. En esta materia aprenderás cómo funcionan los sistemas operativos y cómo administrar computadoras. También estudiarás redes informáticas, dispositivos de comunicación, direcciones IP y conexión entre equipos."
+    actualizarHolograma(
+      "SISTEMAS Y REDES",
+      "Administración de sistemas operativos y conectividad de redes informáticas.",
+      redes1
     );
 
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.95;
+    hablar(
+      "Bienvenido a Sistemas Operativos y Redes. En esta materia aprenderás cómo funcionan los sistemas operativos y cómo administrar computadoras. También estudiarás redes informáticas, dispositivos de comunicación, direcciones IP y conexión entre equipos.",
+      () => {
+        hablar("¿Deseas conocer otra materia del área de informática?", () => navigate("/"));
+      }
+    );
 
-    mensaje.onend = () => {
-      const pregunta = new SpeechSynthesisUtterance(
-        "¿Deseas conocer otra materia del área de informática?"
-      );
-
-      pregunta.lang = "es-ES";
-
-      pregunta.onend = () => {
-        navigate("/");
-      };
-
-      window.speechSynthesis.speak(pregunta);
-    };
-
-    window.speechSynthesis.speak(mensaje);
-
-    return () => {
-      window.speechSynthesis.cancel();
-    };
+    return () => window.speechSynthesis.cancel();
   }, [navigate]);
 
   return (

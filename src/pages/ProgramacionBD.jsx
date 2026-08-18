@@ -1,40 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react"; // ✅ CORRECCIÓN: Importación agregada
-
+import { useEffect } from "react";
 import programacionBD1 from "../img/programacionBD1.png";
 import programacionBD2 from "../img/programacionBD2.png";
 import programacionBD3 from "../img/programacionBD3.png";
 import programacionBD4 from "../img/programacionBD4.png";
 
+import { hablar, actualizarHolograma } from "../voz";
+
 function ProgramacionBD() {
   const navigate = useNavigate();
 
-  // ✅ CORRECCIÓN: Todo este bloque de useEffect fue agregado
   useEffect(() => {
-    const mensaje = new SpeechSynthesisUtterance(
-      "Bienvenido a Programación y Base de Datos. En esta materia aprenderás sobre lógica de programación, desarrollo de software, algoritmos y gestión de bases de datos."
+    actualizarHolograma(
+      "PROGRAMACIÓN Y BD",
+      "Creación de programas y administración de bases de datos.",
+      programacionBD1
     );
-    mensaje.lang = "es-ES";
-    mensaje.rate = 0.95;
 
-    mensaje.onend = () => {
-      const pregunta = new SpeechSynthesisUtterance(
-        "¿Deseas conocer otra materia del área de informática?"
-      );
-      pregunta.lang = "es-ES";
-      pregunta.onend = () => navigate("/");
-      window.speechSynthesis.speak(pregunta);
-    };
+    hablar(
+      "Bienvenido a Programación y Base de Datos. En esta materia aprenderás sobre lógica de programación, desarrollo de software, algoritmos y gestión de bases de datos.",
+      () => {
+        hablar("¿Deseas conocer otra materia del área de informática?", () => navigate("/"));
+      }
+    );
 
-    // Un pequeño retraso para evitar que React cancele el audio al cargar
-    const timer = setTimeout(() => {
-      window.speechSynthesis.speak(mensaje);
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
-      window.speechSynthesis.cancel();
-    };
+    return () => window.speechSynthesis.cancel();
   }, [navigate]);
 
   return (
