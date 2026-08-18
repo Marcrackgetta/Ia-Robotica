@@ -1,0 +1,22 @@
+name: Configuración Local
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Qwen 3 Coder Local
+    provider: ollama
+    model: qwen3-coder:latest
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+
+  - name: Qwen 2.5 Coder
+    provider: ollama
+    model: qwen2.5-coder
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
